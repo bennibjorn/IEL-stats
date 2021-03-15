@@ -1,5 +1,5 @@
 export const Config = {
-    refreshKey: 'OTNlNzI0MzA4MjcyNGIxOWY5ZWIwOGQ4Y2Y2N2Y5ODV5a3ZNZHltZUt2YVZzT2JtdkZiTEFpcktOS2VwTWR1Wg==',
+    refreshKey: process.env.CM_REFRESH_URL,
     CM_URL: 'https://publicapi.challengermode.com/mk1',
 
     season5ProLeagueTournamentId: '47ef22e3-3573-4c32-a4d9-08d8e247c949',
