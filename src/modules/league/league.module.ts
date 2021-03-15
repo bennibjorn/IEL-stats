@@ -1,4 +1,11 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
+import { Challengermode } from 'src/providers/challengermode/challengermode';
+import { LeagueController } from './league.controller';
+import { LeagueService } from './league.service';
 
-@Module({})
+@Module({
+  imports: [HttpModule],
+  controllers: [LeagueController],
+  providers: [LeagueService, Challengermode]
+})
 export class LeagueModule {}

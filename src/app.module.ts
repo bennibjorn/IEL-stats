@@ -4,12 +4,11 @@ import { AppService } from './app.service';
 import { LeagueModule } from './modules/league/league.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { VetoModule } from './modules/veto/veto.module';
-import { Challengermode } from './providers/challengermode/challengermode';
 import { Prismic } from './providers/prismic/prismic';
 
 @Module({
   imports: [LeagueModule, AuthModule, VetoModule, HttpModule],
   controllers: [AppController],
-  providers: [AppService, Challengermode, Prismic],
+  providers: [AppService, Prismic],
 })
 export class AppModule {}
