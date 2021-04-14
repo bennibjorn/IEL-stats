@@ -12,10 +12,13 @@ export class LeagueService {
 	}
 	async getProLeagueStandingsNewsSites(request: Request) {
 		const teams = await this.prismic.getProLeagueTeams(request);
-		// const standings = await this.cm.getProLeagueStandings();
+		const standings = await this.cm.getProLeagueStandings();
 
 		// TODO: combine standings with teams with logos
 		// TODO: convert to xml
-		return teams;
+		return {
+			teams,
+			standings,
+		};
 	}
 }
