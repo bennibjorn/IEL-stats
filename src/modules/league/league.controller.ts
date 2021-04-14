@@ -1,6 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { StandingDTO } from 'src/providers/challengermode/challengermode.types';
 import { LeagueService } from './league.service';
 import { LeagueStandings } from './types';
 

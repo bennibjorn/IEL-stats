@@ -1,11 +1,10 @@
-import { Injectable, HttpService } from '@nestjs/common';
+import { Injectable, HttpService, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { LeagueStandings } from 'src/modules/league/types';
 import { Team } from '../prismic/types';
 import {
 	AccessKeyResponse,
 	GroupStandings,
-	StandingDTO,
 	Tournament,
 	TournamentGroupResponse,
 } from './challengermode.types';
@@ -15,13 +14,15 @@ import { TeamIds } from './mapper';
 @Injectable()
 export class Challengermode {
 	constructor(public http: HttpService, private configService: ConfigService) {}
+	private readonly logger = new Logger(Challengermode.name);
 	private accessKey: string | null = null;
 	private accessKeyExpiresAt: Date | null = null;
 	private async getAccessToken() {
 		// return existing accessKey if not expired
 		const now = new Date();
 		if (this.accessKey !== null && now < this.accessKeyExpiresAt) {
-			console.log(`Existing access key expires at ${this.accessKeyExpiresAt.toUTCString()}`);
+
+			this.logger.log(`Existing access key expires at ${this.accessKeyExpiresAt.toUTCString()}`);
 			return this.accessKey;
 		}
 		const refreshKey = this.configService.get<string>('CM_REFRESH_TOKEN');
@@ -35,15 +36,15 @@ export class Challengermode {
 				if (res.status === 200) {
 					this.accessKey = res.data.value;
 					this.accessKeyExpiresAt = new Date(res.data.expiresAt);
-					console.log(`New access key expires at ${this.accessKeyExpiresAt.toUTCString()}`);
+					this.logger.log(`New access key created, expires at ${this.accessKeyExpiresAt.toUTCString()}`);
 					return res.data.value;
 				} else {
-					console.log('error getting access key', res.status, res.statusText);
+					this.logger.error(`error getting access key, status: ${res.status}. statusText: ${res.statusText}`);
 					return null;
 				}
 			})
 			.catch((err) => {
-				console.log('error getting access key');
+				this.logger.error('Error getting access key from Challengermode', err);
 			});
 	}
 
