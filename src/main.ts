@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
+	const port = process.env.PORT || 3000
 
 	const config = new DocumentBuilder()
 		.setTitle('RÍSÍ mót API')
@@ -11,10 +12,10 @@ async function bootstrap() {
 		.setVersion('1.0')
 		.build();
 	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('', app, document);
+	SwaggerModule.setup('swagger', app, document);
 
-	await app.listen(3000, () => {
-		console.log('App is listening on port 3000');
+	await app.listen(port, () => {
+		console.log(`App is listening on port ${port}`);
 	});
 }
 bootstrap();
