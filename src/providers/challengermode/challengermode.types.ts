@@ -20,7 +20,7 @@ export interface GroupSchedule {
 }
 
 export interface GroupStandings {
-	lineupId?: string;
+	lineupId: string;
 	gamesPlayedCount: number;
 	score: number;
 	gamesWon: number;
@@ -31,7 +31,6 @@ export interface GroupStandings {
 
 export interface StandingDTO extends GroupStandings {
 	team: string;
-	logoUrl?: string;
 }
 
 export interface TournamentGroupResponse {

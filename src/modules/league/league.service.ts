@@ -1,10 +1,9 @@
 import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { Cache } from 'cache-manager';
-import { Request } from 'express';
 import { Challengermode } from 'src/providers/challengermode/challengermode';
-import { StandingDTO } from 'src/providers/challengermode/challengermode.types';
 import { Prismic } from 'src/providers/prismic/prismic';
+import { LeagueStandings } from './types';
 
 @Injectable()
 export class LeagueService {
@@ -18,7 +17,7 @@ export class LeagueService {
 
 	async getProLeagueStandings() {
 		try {
-			const cached = await this.cacheManager.get<StandingDTO[]>(this.cacheKey);
+			const cached = await this.cacheManager.get<LeagueStandings[]>(this.cacheKey);
 			if (!cached) {
 				this.logger.log(`${this.logger.getTimestamp()} - Nothing cached, getting initial data`);
 				return this.updateAndRetreiveStandings();

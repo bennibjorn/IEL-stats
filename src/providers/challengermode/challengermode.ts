@@ -1,5 +1,6 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { LeagueStandings } from 'src/modules/league/types';
 import { Team } from '../prismic/types';
 import {
 	AccessKeyResponse,
@@ -70,7 +71,7 @@ export class Challengermode {
 		return res.data;
 	}
 
-	public async getProLeagueStandings(prismicTeams: Team[]): Promise<StandingDTO[]> {
+	public async getProLeagueStandings(prismicTeams: Team[]): Promise<LeagueStandings[]> {
 		const group = await this.getSeason5TournamentGroup();
 		return group.standings.map((standing: GroupStandings) => {
 			const teamName = TeamIds[standing.lineupId];
@@ -79,11 +80,10 @@ export class Challengermode {
 			return {
 				team: TeamIds[standing.lineupId],
 				logoUrl: teamLogo,
-				gamesPlayedCount: standing.gamesPlayedCount,
 				score: standing.score,
+				gamesPlayed: standing.gamesPlayedCount,
 				gamesWon: standing.gamesWon,
-				gamesTied: standing.gamesTied,
-				mutualMeetings: standing.mutualMeetings,
+				gamesLost: standing.gamesPlayedCount - standing.gamesWon,
 				tiebreaker: standing.tiebreaker,
 			};
 		});

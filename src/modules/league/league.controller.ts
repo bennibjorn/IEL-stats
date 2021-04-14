@@ -1,12 +1,18 @@
-import { Controller, Get, Req } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Get } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { StandingDTO } from 'src/providers/challengermode/challengermode.types';
 import { LeagueService } from './league.service';
+import { LeagueStandings } from './types';
 
-@Controller(['league', 'deild'])
+@ApiTags('league')
+@Controller(['league'])
 export class LeagueController {
 	constructor(private readonly leagueService: LeagueService) {}
-	@Get(['standings', 'stada'])
-	getProLeagueStandings() {
+
+	@Get(['standings'])
+	@ApiOperation({ summary: 'Fetch standings from the pro league' })
+	@ApiResponse({ status: 200, type: LeagueStandings, isArray: true })
+	getProLeagueStandings(): Promise<LeagueStandings[]> {
 		return this.leagueService.getProLeagueStandings();
 	}
 }
