@@ -74,7 +74,7 @@ export class Challengermode {
 		const group = await this.getSeason5TournamentGroup();
 		return group.standings.map((standing: GroupStandings) => {
 			const teamName = TeamIds[standing.lineupId];
-			const teamLogo = prismicTeams.find((x) => x.team_name === teamName || x.team_name_short === teamName)
+			const teamLogo = prismicTeams.find((x) => x.team_name.toLowerCase() === teamName.toLowerCase() || x.team_name_short.toLowerCase() === teamName.toLowerCase())
 				?.team_logo;
 			return {
 				team: TeamIds[standing.lineupId],

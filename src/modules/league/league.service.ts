@@ -16,6 +16,7 @@ export class LeagueService {
 	private readonly logger = new Logger(LeagueService.name);
 
 	async getProLeagueStandings(refreshCache: boolean) {
+		this.logger.log(`${this.logger.getTimestamp()} - getProLeagueStandings called`);
 		if (refreshCache) {
 			this.logger.log(`${this.logger.getTimestamp()} - Manually refreshing cache with new data`);
 			return this.updateAndRetreiveStandings();
