@@ -21,8 +21,6 @@ export class Challengermode {
 		// return existing accessKey if not expired
 		const now = new Date();
 		if (this.accessKey !== null && now < this.accessKeyExpiresAt) {
-
-			this.logger.log(`Existing access key expires at ${this.accessKeyExpiresAt.toUTCString()}`);
 			return this.accessKey;
 		}
 		const refreshKey = this.configService.get<string>('CM_REFRESH_TOKEN');

@@ -15,17 +15,21 @@ export class LeagueService {
 	private readonly cacheKey = 'proStandings';
 	private readonly logger = new Logger(LeagueService.name);
 
-	async getProLeagueStandings() {
+	async getProLeagueStandings(refreshCache: boolean) {
+		if (refreshCache) {
+			this.logger.log(`${this.logger.getTimestamp()} - Manually refreshing cache with new data`);
+			return this.updateAndRetreiveStandings();
+		}
 		try {
 			const cached = await this.cacheManager.get<LeagueStandings[]>(this.cacheKey);
 			if (!cached) {
-				this.logger.log(`${this.logger.getTimestamp()} - Nothing cached, getting initial data`);
+				this.logger.log(`${this.logger.getTimestamp()} - Cache empty, fetching new data`);
 				return this.updateAndRetreiveStandings();
 			}
 			return cached;
 		} catch (error) {
 			// nothing cached
-			this.logger.log(`${this.logger.getTimestamp()} - Nothing cached, getting initial data`);
+			this.logger.log(`${this.logger.getTimestamp()} - Cache empty, fetching new data`);
 			return this.updateAndRetreiveStandings();
 		}
 	}
@@ -33,7 +37,7 @@ export class LeagueService {
 	async updateAndRetreiveStandings() {
 		const teams = await this.prismic.getProLeagueTeams();
 		const standings = await this.cm.getProLeagueStandings(teams);
-		await this.cacheManager.set(this.cacheKey, standings, { ttl: null });
+		await this.cacheManager.set(this.cacheKey, standings, { ttl: 86400 });
 		return standings;
 	}
 
