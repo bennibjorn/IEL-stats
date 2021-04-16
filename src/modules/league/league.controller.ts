@@ -10,7 +10,7 @@ export class LeagueController {
 	constructor(private readonly leagueService: LeagueService, private configService: ConfigService) {}
 
 	@Get('standings')
-	@ApiOperation({ summary: 'Fetch standings from the pro league' })
+	@ApiOperation({ summary: 'Fetch standings from the CS:GO pro league' })
 	@ApiResponse({ status: 200, type: LeagueStandings, isArray: true })
 	@ApiQuery({ name: 'refreshCache', type: Boolean, required: false, description: 'Refreshes the cache if cacheSecret is also included'})
 	@ApiQuery({ name: 'cacheSecret', required: false, description: 'Secret key to enable manually refreshing the cache'})
@@ -20,4 +20,11 @@ export class LeagueController {
 			cacheSecret === this.configService.get<string>('CACHE_SECRET_KEY');
 		return this.leagueService.getProLeagueStandings(shouldRefreshCache);
 	}
+
+	@Get('schedule')
+	@ApiOperation({ summary: 'Fetch schedule from the CS:GO pro league'})
+	getProLeagueSchedule() {
+		
+	}
+
 }
