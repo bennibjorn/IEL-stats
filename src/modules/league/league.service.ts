@@ -35,6 +35,11 @@ export class LeagueService {
 		}
 	}
 
+	async getProLeagueSchedule() {
+		
+		return this.cm.getProLeagueSchedule();
+	}
+
 	async updateAndRetreiveStandings() {
 		const teams = await this.prismic.getProLeagueTeams();
 		const standings = await this.cm.getProLeagueStandings(teams);
