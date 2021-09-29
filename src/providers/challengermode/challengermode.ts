@@ -86,23 +86,26 @@ export class Challengermode {
 		return matches;
 	}
 
-	public async getLatestTournament() {
-		const res = await this.makeRequest<Tournament>(`/v1/tournaments/${Config.latestTournamentId}`);
+	public async getTournament(tournamentId?: string) {
+		const id = tournamentId || Config.latestTournamentId;
+		const res = await this.makeRequest<Tournament>(`/v1/tournaments/${id}`);
 		return res.data;
 	}
-	public async getLatestTournamentBracket() {
-		const res = await this.makeRequest<TournamentBracket>(`/v1/tournaments/brackets/${Config.latestBracketId}`);
+	public async getTournamentBracket(bracketId?: string) {
+		const id = bracketId || Config.latestBracketId;
+		const res = await this.makeRequest<TournamentBracket>(`/v1/tournaments/brackets/${id}`);
 		return res.data;
 	}
-	public async getLatestTournamentGroup() {
+	public async getTournamentGroup(groupId?: string) {
+		const id = groupId || Config.latestGroupId;
 		const res = await this.makeRequest<TournamentGroupResponse>(
-			`/v1/tournaments/groups/${Config.latestGroupId}`,
+			`/v1/tournaments/groups/${id}`,
 		);
 		return res.data;
 	}
 
 	public async getProLeagueStandings(prismicTeams: Team[]): Promise<LeagueStandings[]> {
-		const group = await this.getLatestTournamentGroup();
+		const group = await this.getTournamentGroup();
 		return group.standings.map((standing: GroupStandings) => {
 			const teamName = TeamIds[standing.lineupId];
 			const teamLogo = prismicTeams.find((x) => x.team_name.toLowerCase() === teamName.toLowerCase() || x.team_name_short.toLowerCase() === teamName.toLowerCase())
@@ -120,8 +123,8 @@ export class Challengermode {
 	}
 
 	public async getProLeagueSchedule() {
-		const tournament = await this.getLatestTournament();
-		const group = await this.getLatestTournamentGroup();
+		const tournament = await this.getTournament('10c7caa8-2cee-4f5b-f06f-08d9689fa0e4');
+		const group = await this.getTournamentGroup();
 		const matches = await this.getAllTournamentMatches(group);
 		
 		return { tournament, group, matches };
