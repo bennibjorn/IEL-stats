@@ -35,13 +35,15 @@ export class LeagueGame {
 	teamAway: GameTeam;
 	@ApiProperty()
 	startDateTime: Date;
-	@ApiProperty()
+	@ApiProperty({ description: '0: Unknown, 1: Not started, 2: In progress, 3: Pause, 4: Completed, 5: nullified'})
 	state: number;
 }
 
 export class LeagueRound {
 	@ApiProperty()
 	games: LeagueGame[];
+	@ApiProperty()
+	roundNumber: number;
 }
 
 export class LeagueSchedule {

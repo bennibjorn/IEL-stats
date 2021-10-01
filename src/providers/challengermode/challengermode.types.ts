@@ -3,6 +3,11 @@ export interface AccessKeyResponse {
 	expiresAt: string;
 }
 
+interface TournamentStage {
+	stageIndex: number;
+	bracketIds: string[];
+}
+
 export interface Tournament {
 	urn: string;
 	name: string;
@@ -12,6 +17,7 @@ export interface Tournament {
 	startTime: string;
 	endTime: string;
 	lineupIds: string[];
+	stages: TournamentStage[];
 }
 
 export interface GroupSchedule {
@@ -80,4 +86,28 @@ export interface TournamentMatchSeries {
 	gameLinkIds: string[]; // get game scores from here
 	bestOf: number;
 	scheduledStartTime: string;
+}
+
+export interface Game {
+	urn: string;
+	tournamentMatchSeriesId: string;
+	state: number;
+	name: string;
+	scheduledStartTime: string;
+	startTime: string;
+	stopTime: string;
+	lineups: string[];
+	bestOfSetting: number;
+	gameNumber: string;
+	winningLineupNumber: number; // 0 left side - 1 right side
+	resolutionState: number; // 0 unknown, 1 failed, 2 victory, 3 draw
+}
+
+export interface GameLineup {
+	lineupNumber: number;
+	name: string;
+	teamId: string;
+	tournamentLineupId: string;
+	position: number;
+	score: number;
 }

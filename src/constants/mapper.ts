@@ -8,12 +8,12 @@ export const TeamIds = {
     'ba17b5d0-991e-4fb9-525d-08d8e24578ad': 'Tindastóll',
     '9abc7cb7-a87c-42d6-525c-08d8e24578ad': 'Aurora',
     
-    'f9c9688b-7267-ea11-a94c-281878e918d2': 'Þór',
-    'eda0435e-1ce8-42be-922b-08d83cb3acdf': 'Dusty',
-    '5ecc06a0-40ec-e811-8606-000d3a2213fe': 'Fylkir',
-    '5bd3f44c-2dc4-4d34-c19d-08d95d7f4cd2': 'XY',
-    '15204ca4-cdce-4787-79c3-08d7eadadcb3': 'Kórdrengir',
-    'SAGA': 'SAGA', // TODO
-    'Ármann': 'Ármann', // TODO
-    'VALLEA': 'VALLEA', // TODO
+    '1b288afe-43d7-42fb-72c0-08d97398a654': 'Þór',
+    '1909df52-cb1e-46ba-561d-08d973988c3e': 'Dusty',
+    'f2579cab-b676-42b0-2d91-08d973988c3e': 'Fylkir',
+    '33c08e31-a047-4c29-22f3-08d973988c3e': 'XY',
+    'd1431aac-d599-4f63-320a-08d97398a654': 'Kórdrengir',
+    '420faf8d-092d-4a1c-0ff3-08d98276e796': 'SAGA',
+    '8a8270d7-0f1f-4d35-38cf-08d98276d047': 'Ármann',
+    '666a7088-8979-47c8-38cc-08d98276d047': 'VALLEA',
 }

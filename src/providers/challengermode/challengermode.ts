@@ -4,6 +4,8 @@ import { LeagueStandings } from 'src/modules/league/types';
 import { Team } from '../prismic/types';
 import {
 	AccessKeyResponse,
+	Game,
+	GameLineup,
 	GroupStandings,
 	Tournament,
 	TournamentBracket,
@@ -12,7 +14,7 @@ import {
 	TournamentMatchSeries,
 } from './challengermode.types';
 import { Config } from './config';
-import { TeamIds } from './mapper';
+import { TeamIds } from '../../constants/mapper';
 
 @Injectable()
 export class Challengermode {
@@ -62,28 +64,18 @@ export class Challengermode {
 		);
 		return res.data;
 	}
-	private async getLineupById(lineupId) {
-		const res = await this.makeRequest<TournamentLineup>(
-			`/v1/tournaments/lineup/${lineupId}`
-		);
-		return res.data;
-	}
 
-	public async getAllTournamentMatches(tournamentGroup: TournamentGroupResponse) {
-		const matchSeries: Promise<TournamentMatchSeries>[] = [];
+	public async getMatchesByGroup(tournamentGroup: TournamentGroupResponse) {
+		const matchSeriesPromises: Promise<TournamentMatchSeries>[] = [];
 		tournamentGroup.rounds.forEach((round) => {
 			round.matchSeriesIds.forEach((matchId) => {
-				matchSeries.push(this.getTournamentMatchBySeriesId(matchId));
+				// TODO: check if match result is in cache
+				matchSeriesPromises.push(this.getTournamentMatchBySeriesId(matchId));
 			})
 		});
-		const matches = await Promise.all(matchSeries);
-		matches.sort((a, b) => {
-			if (!a.scheduledStartTime || !b.scheduledStartTime) return 1;
-			const aDate = new Date(a.scheduledStartTime);
-			const bDate = new Date(b.scheduledStartTime);
-			return bDate.valueOf() - aDate.valueOf();
-		});
-		return matches;
+		const matches = await Promise.all(matchSeriesPromises);
+		// get games for finished scores when that starts working
+		return matches
 	}
 
 	public async getTournament(tournamentId?: string) {
@@ -120,13 +112,5 @@ export class Challengermode {
 				tiebreaker: standing.tiebreaker,
 			};
 		});
-	}
-
-	public async getProLeagueSchedule() {
-		const tournament = await this.getTournament('10c7caa8-2cee-4f5b-f06f-08d9689fa0e4');
-		const group = await this.getTournamentGroup();
-		const matches = await this.getAllTournamentMatches(group);
-		
-		return { tournament, group, matches };
 	}
 }
