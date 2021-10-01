@@ -4,12 +4,17 @@ import { LeagueStandings } from 'src/modules/league/types';
 import { Team } from '../prismic/types';
 import {
 	AccessKeyResponse,
+	Game,
+	GameLineup,
 	GroupStandings,
 	Tournament,
+	TournamentBracket,
 	TournamentGroupResponse,
+	TournamentLineup,
+	TournamentMatchSeries,
 } from './challengermode.types';
 import { Config } from './config';
-import { TeamIds } from './mapper';
+import { TeamIds } from '../../constants/mapper';
 
 @Injectable()
 export class Challengermode {
@@ -46,32 +51,53 @@ export class Challengermode {
 			});
 	}
 
-	private async makeRequest<ReturnType>(url: string) {
+	private async makeRequest<ReturnType>(url: string): Promise<{ data: ReturnType }> {
 		const accessKey = await this.getAccessToken();
 		return this.http
 			.get<ReturnType>(Config.CM_URL + url, { headers: { Authorization: 'Bearer ' + accessKey } })
 			.toPromise();
 	}
 
-	public async getSeason5Tournament() {
-		const res = await this.makeRequest<Tournament>(`/v1/tournaments/${Config.season5ProLeagueTournamentId}`);
+	private async getTournamentMatchBySeriesId(matchSeriesId: string) {
+		const res = await this.makeRequest<TournamentMatchSeries>(
+			`/v1/tournaments/match_series/${matchSeriesId}`
+		);
 		return res.data;
 	}
 
-	public async getSeason5TournamentBracket() {
-		const res = await this.makeRequest<any>(`/v1/tournaments/brackets/${Config.season5ProLeagueBracketId}`);
-		return res.data;
+	public async getMatchesByGroup(tournamentGroup: TournamentGroupResponse) {
+		const matchSeriesPromises: Promise<TournamentMatchSeries>[] = [];
+		tournamentGroup.rounds.forEach((round) => {
+			round.matchSeriesIds.forEach((matchId) => {
+				// TODO: check if match result is in cache
+				matchSeriesPromises.push(this.getTournamentMatchBySeriesId(matchId));
+			})
+		});
+		const matches = await Promise.all(matchSeriesPromises);
+		// get games for finished scores when that starts working
+		return matches
 	}
 
-	public async getSeason5TournamentGroup() {
+	public async getTournament(tournamentId?: string) {
+		const id = tournamentId || Config.latestTournamentId;
+		const res = await this.makeRequest<Tournament>(`/v1/tournaments/${id}`);
+		return res.data;
+	}
+	public async getTournamentBracket(bracketId?: string) {
+		const id = bracketId || Config.latestBracketId;
+		const res = await this.makeRequest<TournamentBracket>(`/v1/tournaments/brackets/${id}`);
+		return res.data;
+	}
+	public async getTournamentGroup(groupId?: string) {
+		const id = groupId || Config.latestGroupId;
 		const res = await this.makeRequest<TournamentGroupResponse>(
-			`/v1/tournaments/groups/${Config.season5ProLeagueGroupId}`,
+			`/v1/tournaments/groups/${id}`,
 		);
 		return res.data;
 	}
 
 	public async getProLeagueStandings(prismicTeams: Team[]): Promise<LeagueStandings[]> {
-		const group = await this.getSeason5TournamentGroup();
+		const group = await this.getTournamentGroup();
 		return group.standings.map((standing: GroupStandings) => {
 			const teamName = TeamIds[standing.lineupId];
 			const teamLogo = prismicTeams.find((x) => x.team_name.toLowerCase() === teamName.toLowerCase() || x.team_name_short.toLowerCase() === teamName.toLowerCase())
@@ -86,9 +112,5 @@ export class Challengermode {
 				tiebreaker: standing.tiebreaker,
 			};
 		});
-	}
-
-	public async getProLeagueSchedule() {
-		// TODO
 	}
 }
