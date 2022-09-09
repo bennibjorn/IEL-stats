@@ -8,6 +8,8 @@ export const Config = {
 	season6ProLeagueTournamentId: '0db9f0d9-39ee-43b5-75cf-08d96c782260',
 	season6ProLeagueBracketId: '0bdd7cb8-3f27-43cb-eb68-08d96c78f8fb',
 	season6ProLeagueGroupId: 'c82d03d4-8f84-4a7d-c92b-08d96c78f8fd',
+
+        season7ProLeagueTournamentId: '320664be-74da-453b-f86f-08da9023f147',
  	
 	// Season 6
 	latestTournamentId: '0db9f0d9-39ee-43b5-75cf-08d96c782260',
