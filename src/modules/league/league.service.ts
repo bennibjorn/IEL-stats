@@ -3,6 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { Cache } from 'cache-manager';
 import { TeamIds } from 'src/constants/mapper';
 import { Challengermode } from 'src/providers/challengermode/challengermode';
+import { Config } from 'src/providers/challengermode/config';
 import { Prismic } from 'src/providers/prismic/prismic';
 import { Team } from 'src/providers/prismic/types';
 import { GameTeam, LeagueGame, LeagueRound, LeagueSchedule, LeagueStandings } from './types';
@@ -85,7 +86,7 @@ export class LeagueService {
 		return standings;
 	}
 
-	@Cron('*/5 20,21,22 * * TUE,FRI')
+	@Cron('*/5 19,20,21,22 * * TUE,THU')
 	manuallyUpdateStandingsCache() {
 		this.logger.log(`${this.logger.getTimestamp()} - Running scheduled standings update`);
 		this.updateAndRetreiveStandings();

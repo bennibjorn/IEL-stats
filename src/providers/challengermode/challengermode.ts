@@ -4,13 +4,10 @@ import { LeagueStandings } from 'src/modules/league/types';
 import { Team } from '../prismic/types';
 import {
 	AccessKeyResponse,
-	Game,
-	GameLineup,
 	GroupStandings,
 	Tournament,
 	TournamentBracket,
 	TournamentGroupResponse,
-	TournamentLineup,
 	TournamentMatchSeries,
 } from './challengermode.types';
 import { Config } from './config';
@@ -112,5 +109,15 @@ export class Challengermode {
 				tiebreaker: standing.tiebreaker,
 			};
 		});
+	}
+
+	// TODO: new tournament set up, get all info
+	// supply a tournamentId
+	// get the bracket and group Id
+	// get lineup ids and associated team ids and names for the mapper
+
+	public async getTeamByLineupId(lineupId: string) {
+		const res = await this.makeRequest(`/v1/tournaments/lineups/${lineupId}`);
+		return res.data;
 	}
 }

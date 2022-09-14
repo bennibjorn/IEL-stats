@@ -16,4 +16,15 @@ export const TeamIds = {
     '420faf8d-092d-4a1c-0ff3-08d98276e796': 'SAGA',
     '8a8270d7-0f1f-4d35-38cf-08d98276d047': 'Ármann',
     '666a7088-8979-47c8-38cc-08d98276d047': 'VALLEA',
+
+    'bcde503b-9090-4408-2dc1-08da901db905': 'SAGA',
+    'e5442b64-3f06-4ee9-267a-08da901dc5cc': 'Ármann',
+    'a153114e-7f8d-4d5f-27d0-08da901dc5cc': 'TEN5ION',
+    '01b46d53-4786-48ff-2ab6-08da901dc5cc': 'Fylkir',
+    '36553d54-88b8-47ab-2e38-08da901dc5cc': 'Dusty',
+    'a5cc0ec5-9fa0-4e99-2e41-08da901dc5cc': 'Þór',
+    '98a6904b-08b2-4f38-3b63-08da901dc5cc': 'NÚ',
+    'b760c9aa-496a-4bcb-50ac-08da901db905': 'Viðstöðu',
+    '9aec3107-f054-4c8e-3442-08da901dc5cc': 'LAVA',
+    '32eaa9c4-5ae8-4a3e-33ec-08da901db905': 'Breiðablik'
 }
