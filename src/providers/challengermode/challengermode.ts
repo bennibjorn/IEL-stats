@@ -93,6 +93,14 @@ export class Challengermode {
 		return res.data;
 	}
 
+	private getGamesWon(score: number): number {
+		if (score !== 0) {
+			return score / 2;
+		} else {
+			return 0;
+		}
+	}
+
 	public async getProLeagueStandings(prismicTeams: Team[]): Promise<LeagueStandings[]> {
 		const group = await this.getTournamentGroup();
 		return group.standings.map((standing: GroupStandings) => {
@@ -104,8 +112,8 @@ export class Challengermode {
 				logoUrl: teamLogo,
 				score: standing.score,
 				gamesPlayed: standing.gamesPlayedCount,
-				gamesWon: standing.gamesWon,
-				gamesLost: standing.gamesPlayedCount - standing.gamesWon,
+				gamesWon: this.getGamesWon(standing.score),
+				gamesLost: standing.gamesPlayedCount - this.getGamesWon(standing.score),
 				tiebreaker: standing.tiebreaker,
 			};
 		});
