@@ -3,10 +3,9 @@ import { Cron } from '@nestjs/schedule';
 import { Cache } from 'cache-manager';
 import { TeamIds } from 'src/constants/mapper';
 import { Challengermode } from 'src/providers/challengermode/challengermode';
-import { Config } from 'src/providers/challengermode/config';
 import { Prismic } from 'src/providers/prismic/prismic';
 import { Team } from 'src/providers/prismic/types';
-import { GameTeam, LeagueGame, LeagueRound, LeagueSchedule, LeagueStandings } from './types';
+import { GameTeam, LeagueGame, LeagueRound, LeagueStandings } from './types';
 
 @Injectable()
 export class LeagueService {
@@ -40,42 +39,50 @@ export class LeagueService {
 
 	private teamByLineupId(lineupId: string, score: number, prismicTeams: Team[]): GameTeam {
 		const name = TeamIds[lineupId];
-		const logoUrl = prismicTeams.find((x) => x.team_name.toLowerCase() === name.toLowerCase() || x.team_name_short.toLowerCase() === name.toLowerCase())
-			?.team_logo;
+		const logoUrl = prismicTeams.find(
+			(x) =>
+				x.team_name.toLowerCase() === name.toLowerCase() ||
+				x.team_name_short.toLowerCase() === name.toLowerCase(),
+		)?.team_logo;
 		return {
 			name,
 			logoUrl,
-			score
-		}
+			score,
+		};
 	}
 
 	async getProLeagueSchedule() {
 		const prismicTeams = await this.prismic.getProLeagueTeams();
 		const group = await this.cm.getTournamentGroup();
 		const matches = await this.cm.getMatchesByGroup(group);
-		const orderedMatches: LeagueGame[] = matches.filter(x => x.scheduledStartTime !== null).sort((matchA, matchB) => {
-			return new Date(matchA.scheduledStartTime).valueOf() - new Date(matchB.scheduledStartTime).valueOf();
-		}).map((match) => {
-			if (match.lineups.length !== 2) { return null; }
-			const leftTeam = this.teamByLineupId(match.lineups[0].lineupId, match.lineups[0].score, prismicTeams);
-			const rightTeam = this.teamByLineupId(match.lineups[1].lineupId, match.lineups[1].score, prismicTeams);
-			return {
-				teamHome: leftTeam,
-				teamAway: rightTeam,
-				startDateTime: new Date(match.scheduledStartTime),
-				state: match.state
-			}
-		});
+		const orderedMatches: LeagueGame[] = matches
+			.filter((x) => x.scheduledStartTime !== null)
+			.sort((matchA, matchB) => {
+				return new Date(matchA.scheduledStartTime).valueOf() - new Date(matchB.scheduledStartTime).valueOf();
+			})
+			.map((match) => {
+				if (match.lineups.length !== 2) {
+					return null;
+				}
+				const leftTeam = this.teamByLineupId(match.lineups[0].lineupId, match.lineups[0].score, prismicTeams);
+				const rightTeam = this.teamByLineupId(match.lineups[1].lineupId, match.lineups[1].score, prismicTeams);
+				return {
+					teamHome: leftTeam,
+					teamAway: rightTeam,
+					startDateTime: new Date(match.scheduledStartTime),
+					state: match.state,
+				};
+			});
 		const leagueRounds: LeagueRound[] = [];
 		orderedMatches.forEach((game, index, array) => {
 			if (index % 4 === 0 && index !== 0) {
 				// group this and last 3 games into an array and push to leagueRounds
 				leagueRounds.push({
 					games: [array[index - 4], array[index - 3], array[index - 2], array[index - 1]],
-					roundNumber: Math.ceil(index / 4)
-				})
+					roundNumber: Math.ceil(index / 4),
+				});
 			}
-		})
+		});
 		return leagueRounds;
 	}
 
