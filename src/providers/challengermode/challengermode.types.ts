@@ -55,8 +55,8 @@ export interface TournamentMatchLineupItem {
 }
 
 export interface TournamentRound {
-	index: number,
-	matchSeriesIds: string[]
+	index: number;
+	matchSeriesIds: string[];
 }
 
 export interface TournamentGroupResponse {
@@ -69,12 +69,12 @@ export interface TournamentGroupResponse {
 }
 
 export interface TournamentBracket {
-	urn: string,
-	tournamentId: string,
-	type: number,
-	stageIndex: number,
-	rounds: TournamentRound[],
-	groupIds: string[]
+	urn: string;
+	tournamentId: string;
+	type: number;
+	stageIndex: number;
+	rounds: TournamentRound[];
+	groupIds: string[];
 }
 
 export interface TournamentMatchSeries {
@@ -110,4 +110,71 @@ export interface GameLineup {
 	tournamentLineupId: string;
 	position: number;
 	score: number;
+}
+
+export interface CmImage {
+	width: number;
+	height: number;
+	url: string;
+}
+
+export interface CmImageSizes {
+	small: CmImage;
+	medium: CmImage;
+	large: CmImage;
+}
+
+export interface MatchGameLink {
+	urn: string;
+	id: string;
+	gameId: string;
+	matchSeriesId: string;
+	leftLineup: string;
+	rightLineup: string;
+	resolutionState: number;
+	winner: string;
+	endTime: string;
+}
+
+export interface CmMember {
+	urn: string;
+	id: string;
+	lineupId: string;
+	userId: string;
+	gameAccountId: string;
+	isCaptain: boolean;
+	role: number;
+	isReady: boolean;
+}
+
+export interface TournamentGraphResponse {
+	tournament: TournamentGraph;
+}
+
+export interface TournamentGraph {
+	urn: string;
+	id: string;
+	name: string;
+	ownerUserId: string;
+	logoImage: {
+		small: CmImage;
+		medium: CmImage;
+		large: CmImage;
+		xLarge: CmImage;
+	};
+	bannerImage: CmImageSizes;
+	thumbnailImage: CmImageSizes;
+	scheduledStartTime: Date;
+	lineupIds: string[];
+	filledSlotCount: number;
+	readyLineupCount: number;
+	joinUrl: string;
+	overviewUrl: string;
+	bracket: TournamentBracket;
+	groups: TournamentGroupResponse;
+	matches: TournamentMatchSeries[];
+	matchGameLinks: MatchGameLink[];
+	lineups: TournamentLineup[];
+	members: CmMember[];
+	placements: any[];
 }

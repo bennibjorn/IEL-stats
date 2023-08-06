@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismicConfig } from './config';
-import { Request } from 'express';
 import ResolvedApi from '@prismicio/client/types/ResolvedApi';
 import { RichText } from 'prismic-dom';
 import { Team } from './types';
-const PrismicClient = require('@prismicio/client');
+import PrismicClient from '@prismicio/client';
 @Injectable()
 export class Prismic {
 	private async initApi(): Promise<ResolvedApi> {

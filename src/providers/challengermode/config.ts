@@ -12,10 +12,9 @@ export const Config = {
 	season7ProLeagueTournamentId: '320664be-74da-453b-f86f-08da9023f147',
 	season7ProLeagueBracketId: 'a610c9e0-7615-4105-2213-08da90211724',
 	season7ProLeagueGroupId: '7b60444d-718b-40b4-43c9-08da90211724',
- 	
+
 	// Season 7
 	latestTournamentId: '320664be-74da-453b-f86f-08da9023f147',
 	latestBracketId: 'a610c9e0-7615-4105-2213-08da90211724',
 	latestGroupId: '7b60444d-718b-40b4-43c9-08da90211724',
-
 };

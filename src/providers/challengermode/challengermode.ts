@@ -7,6 +7,7 @@ import {
 	GroupStandings,
 	Tournament,
 	TournamentBracket,
+	TournamentGraphResponse,
 	TournamentGroupResponse,
 	TournamentMatchSeries,
 } from './challengermode.types';
@@ -56,9 +57,7 @@ export class Challengermode {
 	}
 
 	private async getTournamentMatchBySeriesId(matchSeriesId: string) {
-		const res = await this.makeRequest<TournamentMatchSeries>(
-			`/v1/tournaments/match_series/${matchSeriesId}`
-		);
+		const res = await this.makeRequest<TournamentMatchSeries>(`/v1/tournaments/match_series/${matchSeriesId}`);
 		return res.data;
 	}
 
@@ -68,11 +67,11 @@ export class Challengermode {
 			round.matchSeriesIds.forEach((matchId) => {
 				// TODO: check if match result is in cache
 				matchSeriesPromises.push(this.getTournamentMatchBySeriesId(matchId));
-			})
+			});
 		});
 		const matches = await Promise.all(matchSeriesPromises);
 		// get games for finished scores when that starts working
-		return matches
+		return matches;
 	}
 
 	public async getTournament(tournamentId?: string) {
@@ -87,9 +86,7 @@ export class Challengermode {
 	}
 	public async getTournamentGroup(groupId?: string) {
 		const id = groupId || Config.latestGroupId;
-		const res = await this.makeRequest<TournamentGroupResponse>(
-			`/v1/tournaments/groups/${id}`,
-		);
+		const res = await this.makeRequest<TournamentGroupResponse>(`/v1/tournaments/groups/${id}`);
 		return res.data;
 	}
 
@@ -105,8 +102,11 @@ export class Challengermode {
 		const group = await this.getTournamentGroup();
 		return group.standings.map((standing: GroupStandings) => {
 			const teamName = TeamIds[standing.lineupId];
-			const teamLogo = prismicTeams.find((x) => x.team_name.toLowerCase() === teamName.toLowerCase() || x.team_name_short.toLowerCase() === teamName.toLowerCase())
-				?.team_logo;
+			const teamLogo = prismicTeams.find(
+				(x) =>
+					x.team_name.toLowerCase() === teamName.toLowerCase() ||
+					x.team_name_short.toLowerCase() === teamName.toLowerCase(),
+			)?.team_logo;
 			return {
 				team: TeamIds[standing.lineupId],
 				logoUrl: teamLogo,
@@ -117,6 +117,31 @@ export class Challengermode {
 				tiebreaker: standing.tiebreaker,
 			};
 		});
+	}
+
+	public async getLineupsByTournamentId(tournamentId: string) {
+		const tournament = await this.getTournament(tournamentId);
+		return tournament.lineupIds;
+	}
+
+	public async getMembersByLineupId(lineupId: string) {
+		const res = await this.makeRequest(`/v1/tournaments/lineups/${lineupId}`);
+		return res.data;
+	}
+
+	public async getLineupMemberById(memberId: string) {
+		const res = await this.makeRequest(`/v1/tournaments/lineup_members/${memberId}`);
+		return res.data;
+	}
+
+	public async tournamentGraph(id: string) {
+		const res = await this.makeRequest<TournamentGraphResponse>(`/v1/tournaments/${id}/graph`);
+		return res.data;
+	}
+
+	public async getUserById(id: string) {
+		const res = await this.makeRequest(`/v1/users/${id}`);
+		return res.data;
 	}
 
 	// TODO: new tournament set up, get all info
