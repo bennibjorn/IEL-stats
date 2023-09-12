@@ -27,3 +27,31 @@ export interface FragMatchesResponse {
 		[date: string]: FragMatch[];
 	};
 }
+
+export interface FragStanding {
+	team: FragTeam;
+	matches: number;
+	wins: number;
+	draws: number;
+	losses: number;
+	roundDifference: number;
+}
+
+export interface FragBrackets {
+	index: number;
+	type: number;
+	stages: any[];
+	standings: FragStanding[][];
+}
+
+export interface FragStandingsResponse {
+	id: string;
+	game: number;
+	date: Date;
+	name: string;
+	tag: string;
+	logo: string;
+	link: any;
+	teams: FragTeam[];
+	brackets: FragBrackets[];
+}

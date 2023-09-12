@@ -121,7 +121,7 @@ export class LeagueService {
 		return standings;
 	}
 
-	@Cron('*/5 19,20,21,22 * * TUE,THU')
+	@Cron('*/1 19,20,21,22 * * TUE,THU')
 	manuallyUpdateStandingsCache() {
 		this.logger.log(`${this.logger.getTimestamp()} - Running scheduled standings update`);
 		this.updateAndRetreiveStandings();
