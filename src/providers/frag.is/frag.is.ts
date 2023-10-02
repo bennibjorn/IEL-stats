@@ -34,6 +34,24 @@ export class Frag {
 			.toPromise();
 	};
 
+	private sortStandings = (standings: LeagueStandings[]) => {
+		return standings.sort((a, b) => {
+			if (a.score < b.score) {
+				return 1;
+			}
+			if (a.score > b.score) {
+				return -1;
+			}
+			if (a.tiebreaker < b.tiebreaker) {
+				return 1;
+			}
+			if (a.tiebreaker > b.tiebreaker) {
+				return -1;
+			}
+			return 0;
+		});
+	}
+
 	public getProLeagueStandings = async (): Promise<LeagueStandings[]> => {
 		const { data } = await this.getStandingsData();
 		const standings: LeagueStandings[] = [];
@@ -64,7 +82,7 @@ export class Frag {
 			team.score = standing.wins * 2;
 		});
 
-		return standings;
+		return this.sortStandings(standings);
 	};
 	public getProLeagueSchedule = async (): Promise<LeagueRound[]> => {
 		const { data } = await this.getMatchData(100);
